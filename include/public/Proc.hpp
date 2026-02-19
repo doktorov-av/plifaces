@@ -10,12 +10,14 @@
 #include <filesystem>
 #include <vector>
 
-namespace proc {
-    std::filesystem::path MakeDescriptorsDir(int pid);
-    [[nodiscard]] std::vector<std::string> ReadFileDescriptors(int pid);
-    [[nodiscard]] std::vector<std::string> ExtractSockets(std::vector<std::string> fds);
-    [[nodiscard]] std::vector<int> ExtractSocketsNodes(const std::vector<std::string>& sockets);
-    [[nodiscard]] std::vector<NetAddress> ExtractLocalAddress(const std::vector<int>& inodes);
-}// namespace proc
+PLIFACES_NAMESPACE_BEGIN
+
+std::filesystem::path MakeDescriptorsDir(int pid);
+[[nodiscard]] std::vector<std::string> ReadFileDescriptors(int pid);
+[[nodiscard]] std::vector<std::string> ExtractSockets(std::vector<std::string> fds);
+[[nodiscard]] std::vector<int> ExtractSocketsNodes(const std::vector<std::string>& sockets);
+[[nodiscard]] std::vector<NetAddress> ExtractLocalAddress(const std::vector<int>& inodes);
+
+PLIFACES_NAMESPACE_END
 
 #endif//PLIFACES_PROC_HPP

@@ -1,0 +1,10 @@
+//
+// Created by doktorov-av on 2/19/26.
+//
+
+#ifndef PLIFACES_CONFIG_HPP
+#define PLIFACES_CONFIG_HPP
+
+#define PLIFACES_NAMESPACE @PLIFACES_NAMESPACE@
+
+#endif//PLIFACES_CONFIG_HPP

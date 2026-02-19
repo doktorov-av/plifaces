@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "Proc.hpp"
 #include "Netlink.hpp"
+#include "Proc.hpp"
 
 #include <cstring>
 #include <net/if.h>
@@ -26,11 +26,15 @@ void print_addrs(const std::vector<NetAddress>& addr) {
     std::cout << "]\n";
 }
 
+void test_get_interface_info() {
+
+}
+
 int test_plifaces() {
-    auto fds = proc::ReadFileDescriptors(3461829);
-    auto sockets = proc::ExtractSockets(std::move(fds));
-    auto nodes = proc::ExtractSocketsNodes(sockets);
-    auto addrs = proc::ExtractLocalAddress(nodes);
+    auto fds = plifaces::ReadFileDescriptors(3461829);
+    auto sockets = plifaces::ExtractSockets(std::move(fds));
+    auto nodes = plifaces::ExtractSocketsNodes(sockets);
+    auto addrs = plifaces::ExtractLocalAddress(nodes);
 
     print_container(fds);
     print_container(sockets);
