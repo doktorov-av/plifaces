@@ -2,20 +2,23 @@
 // Created by doktorov-av on 2/12/26.
 //
 
-#include "Proc.hpp"
 #include "Directory.hpp"
+#include "NetAddress.hpp"
+#include "Plifaces.hpp"
 
 #include <algorithm>
 #include <cstring>
 #include <iostream>
 
-std::filesystem::path proc::MakeDescriptorsDir(int pid) {
+PLIFACES_NAMESPACE_BEGIN
+
+std::filesystem::path MakeDescriptorsDir(int pid) {
     std::stringstream ss;
     ss << "/proc/" << pid << "/fd";
     return ss.str();
 }
 
-std::vector<std::string> proc::ReadFileDescriptors(int pid) {
+std::vector<std::string> ReadFileDescriptors(int pid) {
     std::vector<std::string> res;
 
     Directory dir = {};
@@ -35,14 +38,14 @@ std::vector<std::string> proc::ReadFileDescriptors(int pid) {
     return res;
 }
 
-std::vector<std::string> proc::ExtractSockets(std::vector<std::string> fds) {
+std::vector<std::string> ExtractSockets(std::vector<std::string> fds) {
     auto end = std::remove_if(fds.begin(), fds.end(), [](const std::string& fdLink) {
                    return fdLink.find("socket:") != 0;
                });
     return {fds.begin(), end};
 }
 
-std::vector<int> proc::ExtractSocketsNodes(const std::vector<std::string>& sockets) {
+std::vector<int> ExtractSocketsNodes(const std::vector<std::string>& sockets) {
     std::vector<int> nodes(sockets.size());
     std::transform(sockets.begin(), sockets.end(), nodes.begin(), [](const std::string& str) {
         const auto startPos = str.find('[');
@@ -53,7 +56,7 @@ std::vector<int> proc::ExtractSocketsNodes(const std::vector<std::string>& socke
     return nodes;
 }
 
-std::vector<NetAddress> proc::ExtractLocalAddress(const std::vector<int>& inodes) {
+std::vector<NetAddress> ExtractLocalAddress(const std::vector<int>& inodes) {
     FILE* tcpFile = fopen("/proc/net/tcp", "r");
     if (!tcpFile) {
         throw std::runtime_error(strerror(errno));
@@ -89,3 +92,8 @@ std::vector<NetAddress> proc::ExtractLocalAddress(const std::vector<int>& inodes
     fclose(tcpFile);
     return result;
 }
+std::vector<NetInterface> GetInterfaceMacByIpV4(std::string_view string) {
+    return {};
+}
+
+PLIFACES_NAMESPACE_END

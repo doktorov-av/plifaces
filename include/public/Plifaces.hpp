@@ -6,6 +6,7 @@
 #define PLIFACES_PROC_HPP
 
 #include "NetAddress.hpp"
+#include "NetInterface.hpp"
 
 #include <filesystem>
 #include <vector>
@@ -17,6 +18,7 @@ std::filesystem::path MakeDescriptorsDir(int pid);
 [[nodiscard]] std::vector<std::string> ExtractSockets(std::vector<std::string> fds);
 [[nodiscard]] std::vector<int> ExtractSocketsNodes(const std::vector<std::string>& sockets);
 [[nodiscard]] std::vector<NetAddress> ExtractLocalAddress(const std::vector<int>& inodes);
+[[nodiscard]] std::vector<NetInterface> GetInterfaceMacByIpV4(std::string_view string);
 
 PLIFACES_NAMESPACE_END
 
