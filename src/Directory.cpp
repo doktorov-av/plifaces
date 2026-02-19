@@ -2,7 +2,7 @@
 // Created by doktorov-av on 2/12/26.
 //
 
-#include "../include/private/Directory.hpp"
+#include "Directory.hpp"
 
 #include <cstring>
 #include <dirent.h>
