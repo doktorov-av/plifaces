@@ -92,7 +92,8 @@ std::vector<NetAddress> ExtractLocalAddress(const std::vector<int>& inodes) {
     fclose(tcpFile);
     return result;
 }
-std::vector<NetInterface> GetInterfaceMacByIpV4(std::string_view string) {
+
+std::vector<NetInterface> GetInterfaceMacByIpV4(std::string_view ipV4) {
     return {};
 }
 
