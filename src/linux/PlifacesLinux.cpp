@@ -7,8 +7,11 @@
 #include "Plifaces.hpp"
 
 #include <algorithm>
+#include <arpa/inet.h>
 #include <cstring>
+#include <ifaddrs.h>
 #include <iostream>
+#include <netdb.h>
 
 PLIFACES_NAMESPACE_BEGIN
 
@@ -40,8 +43,8 @@ std::vector<std::string> ReadFileDescriptors(int pid) {
 
 std::vector<std::string> ExtractSockets(std::vector<std::string> fds) {
     auto end = std::remove_if(fds.begin(), fds.end(), [](const std::string& fdLink) {
-                   return fdLink.find("socket:") != 0;
-               });
+        return fdLink.find("socket:") != 0;
+    });
     return {fds.begin(), end};
 }
 
@@ -83,7 +86,7 @@ std::vector<NetAddress> ExtractLocalAddress(const std::vector<int>& inodes) {
             continue;
         }
 
-        auto addr = NetAddress::FromParts(std::array<unsigned int, 4>{ local_addr[0], local_addr[1], local_addr[2], local_addr[3] });
+        auto addr = NetAddress::FromParts(std::array<unsigned int, 4>{local_addr[0], local_addr[1], local_addr[2], local_addr[3]});
         addr.port = local_port;
 
         result.emplace_back(std::move(addr));
@@ -94,6 +97,38 @@ std::vector<NetAddress> ExtractLocalAddress(const std::vector<int>& inodes) {
 }
 
 std::vector<NetInterface> GetInterfaceMacByIpV4(std::string_view ipV4) {
+    ifaddrs* interfaceAddresses = nullptr;
+    if (getifaddrs(&interfaceAddresses) == -1) {
+        throw std::system_error(errno, std::system_category(), strerror(errno));
+    }
+
+    auto checkedIp = IpV4::FromStringView(ipV4);
+    for (ifaddrs* ifa = interfaceAddresses; ifa != nullptr; ifa = ifa->ifa_next) {
+        if (!ifa->ifa_addr) {
+            continue;
+        }
+
+        // TODO: process AF_PACKET, that is MAC address
+        const auto family = ifa->ifa_addr->sa_family;
+        if (family != AF_INET) {
+            std::cout << family << " unknown\n";
+            continue;
+        }
+
+        const auto sin = reinterpret_cast<sockaddr_in*>(ifa->ifa_addr);
+        if (!sin) {
+            continue;
+        }
+
+        NetInterface interface{};
+        interface.ip.data = sin->sin_addr.s_addr;
+
+        if (interface.ip == checkedIp) {
+            std::cout << checkedIp.ToString();
+        }
+    }
+
+    freeifaddrs(interfaceAddresses);
     return {};
 }
 

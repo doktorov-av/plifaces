@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "Netlink.hpp"
-#include "Proc.hpp"
+#include "Plifaces.hpp"
 
 #include <cstring>
 #include <net/if.h>
@@ -27,7 +27,8 @@ void print_addrs(const std::vector<NetAddress>& addr) {
 }
 
 void test_get_interface_info() {
-
+    std::string ipV4 = "127.0.0.0";
+    auto interface = plifaces::GetInterfaceMacByIpV4(ipV4);
 }
 
 int test_plifaces() {
@@ -44,8 +45,7 @@ int test_plifaces() {
     return 0;
 }
 
-int main()
-{
+void test_netlink() {
     Netlink netlink;
     netlink.Open();
     netlink.RequestRouteDump();
@@ -56,8 +56,11 @@ int main()
             std::cout << "default via " << r.gateway << std::endl;
         }
     }
+}
 
-    return 0;
+int main()
+{
+    test_get_interface_info();
 }
 
 #include <arpa/inet.h>

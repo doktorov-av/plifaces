@@ -4,12 +4,14 @@
 
 #ifndef PLIFACES_NETINTERFACE_HPP
 #define PLIFACES_NETINTERFACE_HPP
+#include "IpV4.hpp"
 
-class NetInterface {
-public:
+PLIFACES_NAMESPACE_BEGIN
 
-private:
-
+struct NetInterface {
+    IpV4 ip;
 };
+
+PLIFACES_NAMESPACE_END
 
 #endif//PLIFACES_NETINTERFACE_HPP
