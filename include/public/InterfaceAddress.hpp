@@ -5,11 +5,15 @@
 #ifndef PLIFACES_NETINTERFACE_HPP
 #define PLIFACES_NETINTERFACE_HPP
 #include "IpV4.hpp"
+#include "Mac.hpp"
+#include <vector>
 
 PLIFACES_NAMESPACE_BEGIN
 
-struct NetInterface {
-    IpV4 ip;
+class InterfaceAddress {
+public:
+    std::vector<Mac> macs;
+    std::vector<IpV4> ips;
 };
 
 PLIFACES_NAMESPACE_END

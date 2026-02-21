@@ -10,11 +10,14 @@
 
 PLIFACES_NAMESPACE_BEGIN
 
-struct IpV4 {
+class IpV4 {
+public:
+    IpV4() = default;
     static IpV4 FromStringView(std::string_view str);
     [[nodiscard]] std::string ToString() const;
     bool operator==(const IpV4& rhs) const;
-    uint32_t data; // bytes representation of ipV4
+
+    uint32_t data = 0; // bytes representation of ipV4
 };
 
 PLIFACES_NAMESPACE_END

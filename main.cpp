@@ -3,6 +3,7 @@
 #include "Netlink.hpp"
 #include "Plifaces.hpp"
 
+#include <algorithm>
 #include <cstring>
 #include <net/if.h>
 
@@ -27,8 +28,20 @@ void print_addrs(const std::vector<NetAddress>& addr) {
 }
 
 void test_get_interface_info() {
-    std::string ipV4 = "127.0.0.0";
-    auto interface = plifaces::GetInterfaceMacByIpV4(ipV4);
+    std::string ipV4 = "127.0.0.1";
+    auto interfaces = plifaces::GetInterfaces();
+
+    auto it = std::find_if(interfaces.begin(), interfaces.end(), [&ipV4](const auto& pair) {
+        auto& ips = pair.second.ips;
+        return std::find_if(ips.begin(), ips.end(), [&ipV4](const auto& ip) {
+            return ip.ToString() == ipV4;
+        }) != ips.end();
+    });
+
+    if (it != interfaces.end()) {
+        const auto& [name, iface] = *it;
+        std::cout << name << " macs: " << iface.macs[0].ToString() << " ips: " << iface.ips[0].ToString() <<  '\n';
+    }
 }
 
 int test_plifaces() {

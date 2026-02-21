@@ -12,6 +12,7 @@
 #include <ifaddrs.h>
 #include <iostream>
 #include <netdb.h>
+#include <linux/if_packet.h>
 
 PLIFACES_NAMESPACE_BEGIN
 
@@ -96,40 +97,45 @@ std::vector<NetAddress> ExtractLocalAddress(const std::vector<int>& inodes) {
     return result;
 }
 
-std::vector<NetInterface> GetInterfaceMacByIpV4(std::string_view ipV4) {
+std::unordered_map<std::string, InterfaceAddress> GetInterfaces() {
     ifaddrs* interfaceAddresses = nullptr;
     if (getifaddrs(&interfaceAddresses) == -1) {
         throw std::system_error(errno, std::system_category(), strerror(errno));
     }
 
-    auto checkedIp = IpV4::FromStringView(ipV4);
+    std::unordered_map<std::string, InterfaceAddress> interfaces{};
     for (ifaddrs* ifa = interfaceAddresses; ifa != nullptr; ifa = ifa->ifa_next) {
         if (!ifa->ifa_addr) {
             continue;
         }
 
-        // TODO: process AF_PACKET, that is MAC address
+        auto name = std::string(ifa->ifa_name);
+        auto& interface = interfaces[name];
+
         const auto family = ifa->ifa_addr->sa_family;
-        if (family != AF_INET) {
-            std::cout << family << " unknown\n";
-            continue;
-        }
 
-        const auto sin = reinterpret_cast<sockaddr_in*>(ifa->ifa_addr);
-        if (!sin) {
-            continue;
-        }
+        // process AF_INET address
+        if (family == AF_INET) {
+            const auto sin = reinterpret_cast<sockaddr_in*>(ifa->ifa_addr);
+            if (!sin) {
+                continue;
+            }
 
-        NetInterface interface{};
-        interface.ip.data = sin->sin_addr.s_addr;
+            auto& ip = interface.ips.emplace_back();
+            ip.data = sin->sin_addr.s_addr;
+        } else if (family == AF_PACKET) {
+            const auto paddr = reinterpret_cast<sockaddr_ll*>(ifa->ifa_addr);
+            if (!paddr) {
+                continue;
+            }
 
-        if (interface.ip == checkedIp) {
-            std::cout << checkedIp.ToString();
+            auto& mac = interface.macs.emplace_back();
+            std::memcpy(mac.data.data(), paddr->sll_addr, paddr->sll_halen);
         }
     }
 
     freeifaddrs(interfaceAddresses);
-    return {};
+    return interfaces;
 }
 
 PLIFACES_NAMESPACE_END
