@@ -10,11 +10,8 @@
 
 PLIFACES_NAMESPACE_BEGIN
 
-class Mac {
-public:
-    Mac() = default;
+struct Mac {
     [[nodiscard]] std::string ToString() const;
-
     std::array<unsigned char, 8> data;
 };
 

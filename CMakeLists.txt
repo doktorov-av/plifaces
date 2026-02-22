@@ -19,7 +19,7 @@ if(UNIX)
     file(GLOB src_linux ${CMAKE_CURRENT_SOURCE_DIR}/src/linux/*.cpp)
     list(APPEND src ${src_linux})
 elseif (WIN32)
-    file(GLOB src_windows ${CMAKE_CURRENT_SOURCE_DIR}/src/windows/*.cpp)
+    file(GLOB src_windows ${CMAKE_CURRENT_SOURCE_DIR}/src/${CMAKE_SYSTEM_NAME}/*.cpp)
     list(APPEND src ${src_windows})
 else ()
     message(FATAL_ERROR "Unsupported target system ${CMAKE_SYSTEM_NAME}")
@@ -28,6 +28,8 @@ endif ()
 add_library(plifaces
     ${src}
     ${include}
+        src/Errors.cpp
+        include/public/Interface.hpp
 )
 
 target_include_directories(plifaces

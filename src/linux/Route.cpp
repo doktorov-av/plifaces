@@ -4,7 +4,7 @@
 
 // partially copied from https://olegkutkov.me/2019/03/24/getting-linux-routing-table-using-netlink/
 
-#include "Route.hpp"
+#include "../../include/public/linux/Route.hpp"
 
 #include <arpa/inet.h>
 #include <bits/socket.h>

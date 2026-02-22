@@ -10,8 +10,7 @@
 
 PLIFACES_NAMESPACE_BEGIN
 
-class InterfaceAddress {
-public:
+struct InterfaceAddress {
     std::vector<Mac> macs;
     std::vector<IpV4> ips;
 };

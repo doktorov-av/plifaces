@@ -5,11 +5,10 @@
 #ifndef PLIFACES_PROC_HPP
 #define PLIFACES_PROC_HPP
 
-#include "InterfaceAddress.hpp"
+#include "InterfaceVector.hpp"
 #include "NetAddress.hpp"
 
 #include <filesystem>
-#include <unordered_map>
 #include <vector>
 
 PLIFACES_NAMESPACE_BEGIN
@@ -19,7 +18,7 @@ std::filesystem::path MakeDescriptorsDir(int pid);
 [[nodiscard]] std::vector<std::string> ExtractSockets(std::vector<std::string> fds);
 [[nodiscard]] std::vector<int> ExtractSocketsNodes(const std::vector<std::string>& sockets);
 [[nodiscard]] std::vector<NetAddress> ExtractLocalAddress(const std::vector<int>& inodes);
-[[nodiscard]] std::unordered_map<std::string, InterfaceAddress> GetInterfaces();
+[[nodiscard]] InterfaceVector GetInterfaces();
 
 PLIFACES_NAMESPACE_END
 

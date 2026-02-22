@@ -2,9 +2,9 @@
 // Created by doktorov-av on 17.02.2026.
 //
 
-#include <Netlink.hpp>
+#include <../include/public/linux/Netlink.hpp>
 
-#include "Route.hpp"
+#include "../../include/public/linux/Route.hpp"
 
 #include <arpa/inet.h>
 #include <cassert>

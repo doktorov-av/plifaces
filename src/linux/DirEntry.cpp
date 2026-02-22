@@ -2,11 +2,11 @@
 // Created by doktorov-av on 2/12/26.
 //
 
-#include "../include/private/DirEntry.hpp"
+#include "../../include/private/linux/DirEntry.hpp"
 
 #include <unistd.h>
 
-#include "Directory.hpp"
+#include "../../include/private/linux/Directory.hpp"
 
 DirEntry::DirEntry(Directory* parent, dirent* entry) : m_Parent(parent), m_Entry(entry) {}
 

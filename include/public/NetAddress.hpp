@@ -6,7 +6,6 @@
 #define PLIFACES_NETADDRESS_HPP
 #include <array>
 #include <cstdint>
-#include <netinet/in.h>
 #include <string>
 #include <string_view>
 
@@ -19,14 +18,14 @@ struct NetAddress {
 
     template <class I>
     static NetAddress FromParts(const std::array<I, 4>& parts) {
-        std::array<uint8_t, 4> byteParts;
+        std::array<uint8_t, 4> byteParts{};
         for (int i = 0; i < 4; i++) {
             byteParts[i] = static_cast<uint8_t>(parts[i]);
         }
         return NetAddress(byteParts);
     }
 
-    std::string GetIpV4String() const;
+    [[nodiscard]] std::string GetIpV4String() const;
 };
 
 #endif //PLIFACES_NETADDRESS_HPP
