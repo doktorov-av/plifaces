@@ -97,20 +97,20 @@ std::vector<NetAddress> ExtractLocalAddress(const std::vector<int>& inodes) {
     return result;
 }
 
-std::unordered_map<std::string, InterfaceAddress> GetInterfaces() {
+InterfaceVector GetInterfaces() {
     ifaddrs* interfaceAddresses = nullptr;
     if (getifaddrs(&interfaceAddresses) == -1) {
         throw std::system_error(errno, std::system_category(), strerror(errno));
     }
 
-    std::unordered_map<std::string, InterfaceAddress> interfaces{};
+    std::unordered_map<std::string, InterfaceAddress> ifMap{};
     for (ifaddrs* ifa = interfaceAddresses; ifa != nullptr; ifa = ifa->ifa_next) {
         if (!ifa->ifa_addr) {
             continue;
         }
 
         auto name = std::string(ifa->ifa_name);
-        auto& interface = interfaces[name];
+        auto& interface = ifMap[name];
 
         const auto family = ifa->ifa_addr->sa_family;
 
@@ -135,7 +135,18 @@ std::unordered_map<std::string, InterfaceAddress> GetInterfaces() {
     }
 
     freeifaddrs(interfaceAddresses);
-    return interfaces;
+
+    std::vector<Interface> result{};
+    result.reserve(ifMap.size());
+
+    for (auto& [ifname, address] : ifMap) {
+        Interface itface;
+        itface.name = std::move(ifname);
+        itface.address = std::move(address);
+
+        result.emplace_back(std::move(itface));
+    }
+    return InterfaceVector(result);
 }
 
 PLIFACES_NAMESPACE_END

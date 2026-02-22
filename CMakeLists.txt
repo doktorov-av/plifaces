@@ -15,7 +15,7 @@ configure_file(
         @ONLY
 )
 
-if(UNIX)
+if (UNIX)
     file(GLOB src_linux ${CMAKE_CURRENT_SOURCE_DIR}/src/linux/*.cpp)
     list(APPEND src ${src_linux})
 elseif (WIN32)
@@ -26,8 +26,8 @@ else ()
 endif ()
 
 add_library(plifaces
-    ${src}
-    ${include}
+        ${src}
+        ${include}
         src/Errors.cpp
         include/public/Interface.hpp
 )
@@ -40,10 +40,19 @@ target_include_directories(plifaces
         ${CMAKE_CURRENT_BINARY_DIR}/generated/config
 )
 
+if (UNIX)
+    target_include_directories(plifaces
+            PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}/include/private/linux
+            PUBLIC
+            ${CMAKE_CURRENT_SOURCE_DIR}/include/public/linux
+    )
+endif ()
+
 target_compile_definitions(plifaces PUBLIC
-    PLIFACES_NAMESPACE=${PLIFACES_NAMESPACE}
-    "PLIFACES_NAMESPACE_BEGIN=namespace ${PLIFACES_NAMESPACE} {"
-    "PLIFACES_NAMESPACE_END=}"
+        PLIFACES_NAMESPACE=${PLIFACES_NAMESPACE}
+        "PLIFACES_NAMESPACE_BEGIN=namespace ${PLIFACES_NAMESPACE} {"
+        "PLIFACES_NAMESPACE_END=}"
 )
 
 add_executable(plifaces_test ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)

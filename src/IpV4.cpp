@@ -4,6 +4,8 @@
 
 #include "IpV4.hpp"
 #include "Errors.hpp"
+
+#include <cstring>
 #include <system_error>
 
 #ifdef WIN32

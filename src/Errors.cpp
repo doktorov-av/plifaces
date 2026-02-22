@@ -4,6 +4,8 @@
 
 #include "Errors.hpp"
 
+#include <system_error>
+
 #ifdef WIN32
 #define strerror_length(error) 100
 #else
@@ -12,8 +14,6 @@
 
 
 std::string plifaces::SystemErrorMessage() {
-    const auto msgLen = strerror_length(errno);
-    char errMessage[msgLen];
-    strerror_s(errMessage, msgLen, errno);
-    return { errMessage };
+    const auto errorCode = std::make_error_code(static_cast<std::errc>(errno));
+    return errorCode.message();
 }

@@ -8,7 +8,6 @@
 #include "Route.hpp"
 #include <vector>
 
-
 class Netlink {
 public:
     Netlink() = default;

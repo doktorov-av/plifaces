@@ -3,6 +3,7 @@
 //
 
 #include "InterfaceVector.hpp"
+#include <algorithm>
 
 PLIFACES_NAMESPACE_BEGIN
 
