@@ -17,6 +17,7 @@ public:
     explicit InterfaceVector(std::vector<Interface> data);
 
     [[nodiscard]] const std::vector<Interface>& GetInterfaces() const;
+    [[nodiscard]] std::vector<Interface>& GetInterfaces();
     [[nodiscard]] std::optional<Interface> FindByIp(IpV4 ip) const;
 private:
     std::vector<Interface> m_Data;

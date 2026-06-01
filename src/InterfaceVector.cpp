@@ -12,6 +12,10 @@ InterfaceVector::InterfaceVector(std::vector<Interface> data) : m_Data(std::move
 }
 
 const std::vector<Interface>& InterfaceVector::GetInterfaces() const {
+    return const_cast<InterfaceVector&>(*this).GetInterfaces();
+}
+
+std::vector<Interface>& InterfaceVector::GetInterfaces() {
     return m_Data;
 }
 
